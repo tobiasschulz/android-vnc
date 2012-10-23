@@ -375,7 +375,7 @@ public class VncCanvasActivity extends Activity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		
-		execCommandLine("/xbin/ubuntu-hook-vncclient");
+		execCommandLine("/system/bin/sh /sdcard/vnc.sh");
 
 		super.onCreate(icicle);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);

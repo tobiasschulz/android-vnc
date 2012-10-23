@@ -23,7 +23,6 @@
         android:id="@+id/zoomKeys1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/showkeyboard"
-        android:contentDescription="@string/hello" />
+        android:background="@drawable/showkeyboard" />
 
 </merge>
