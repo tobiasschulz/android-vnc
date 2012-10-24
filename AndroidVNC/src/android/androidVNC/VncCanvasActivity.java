@@ -897,7 +897,7 @@ public class VncCanvasActivity extends Activity {
 						inputModeHandlers[i] = new TouchpadInputHandler();
 						break;
 					case R.id.itemInputHackersKeyboard:
-						inputModeHandlers[i] = new TouchpadInputHandler();
+						inputModeHandlers[i] = new HackersKeyboardInputHandler();
 						break;
 					}
 				}
