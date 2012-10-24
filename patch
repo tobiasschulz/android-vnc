@@ -1,0 +1,2117 @@
+diff -rbBEdiw AndroidVNC-orig/src/android/androidVNC/AbstractBitmapData.java AndroidVNC/src/android/androidVNC/AbstractBitmapData.java
+12a13
+> import android.widget.TextView;
+120c121
+< 	void updateView(ImageView v)
+---
+> 	void updateView(VncCanvas v)
+Nur in AndroidVNC/src/android/androidVNC: AbstractConnectionBean.java.
+Nur in AndroidVNC/src/android/androidVNC: AbstractMetaKeyBean.java.
+diff -rbBEdiw AndroidVNC-orig/src/android/androidVNC/AbstractScaling.java AndroidVNC/src/android/androidVNC/AbstractScaling.java
+89d88
+< 		activity.zoomer.hide();
+diff -rbBEdiw AndroidVNC-orig/src/android/androidVNC/androidVNC.java AndroidVNC/src/android/androidVNC/androidVNC.java
+30a31
+> import android.util.Log;
+42a44,45
+> import java.io.IOException;
+> import java.io.OutputStreamWriter;
+75c78,79
+< 		((Button) findViewById(R.id.buttonRepeater)).setOnClickListener(new View.OnClickListener() {
+---
+> 		((Button) findViewById(R.id.buttonRepeater))
+> 				.setOnClickListener(new View.OnClickListener() {
+82c86,87
+< 		((Button)findViewById(R.id.buttonImportExport)).setOnClickListener(new View.OnClickListener() {
+---
+> 		((Button) findViewById(R.id.buttonImportExport))
+> 				.setOnClickListener(new View.OnClickListener() {
+90c95,96
+< 		ArrayAdapter<COLORMODEL> colorSpinnerAdapter = new ArrayAdapter<COLORMODEL>(this, android.R.layout.simple_spinner_item, models);
+---
+> 		ArrayAdapter<COLORMODEL> colorSpinnerAdapter = new ArrayAdapter<COLORMODEL>(
+> 				this, android.R.layout.simple_spinner_item, models);
+97c103,104
+< 		spinnerConnection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+---
+> 		spinnerConnection
+> 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+99c106,107
+< 			public void onItemSelected(AdapterView<?> ad, View view, int itemIndex, long id) {
+---
+> 					public void onItemSelected(AdapterView<?> ad, View view,
+> 							int itemIndex, long id) {
+108c117,118
+< 		spinnerConnection.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+---
+> 		spinnerConnection
+> 				.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+110,111c120,125
+< 			/* (non-Javadoc)
+< 			 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
+---
+> 					/*
+> 					 * (non-Javadoc)
+> 					 * 
+> 					 * @see android.widget.AdapterView.OnItemLongClickListener#
+> 					 * onItemLongClick(android.widget.AdapterView,
+> 					 * android.view.View, int, long)
+114,115c128,129
+< 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+< 					int arg2, long arg3) {
+---
+> 					public boolean onItemLongClick(AdapterView<?> arg0,
+> 							View arg1, int arg2, long arg3) {
+117c131,132
+< 				selected = (ConnectionBean)spinnerConnection.getItemAtPosition(arg2);
+---
+> 						selected = (ConnectionBean) spinnerConnection
+> 								.getItemAtPosition(arg2);
+139c154,156
+< 	/* (non-Javadoc)
+---
+> 	/*
+> 	 * (non-Javadoc)
+> 	 * 
+150c167,169
+< 	/* (non-Javadoc)
+---
+> 	/*
+> 	 * (non-Javadoc)
+> 	 * 
+159c178,180
+< 	/* (non-Javadoc)
+---
+> 	/*
+> 	 * (non-Javadoc)
+> 	 * 
+164,165c185,188
+< 		menu.findItem(R.id.itemDeleteConnection).setEnabled(selected!=null && ! selected.isNew());
+< 		menu.findItem(R.id.itemSaveAsCopy).setEnabled(selected!=null && ! selected.isNew());
+---
+> 		menu.findItem(R.id.itemDeleteConnection).setEnabled(
+> 				selected != null && !selected.isNew());
+> 		menu.findItem(R.id.itemSaveAsCopy).setEnabled(
+> 				selected != null && !selected.isNew());
+169c192,194
+< 	/* (non-Javadoc)
+---
+> 	/*
+> 	 * (non-Javadoc)
+> 	 * 
+174,175c199
+< 		switch (item.getItemId())
+< 		{
+---
+> 		switch (item.getItemId()) {
+177c201,202
+< 			if (selected.getNickname().equals(textNickname.getText().toString()))
+---
+> 			if (selected.getNickname()
+> 					.equals(textNickname.getText().toString()))
+185c210,211
+< 			Utils.showYesNoPrompt(this, "Delete?", "Delete " + selected.getNickname() + "?",
+---
+> 			Utils.showYesNoPrompt(this, "Delete?",
+> 					"Delete " + selected.getNickname() + "?",
+188,189c214
+< 				public void onClick(DialogInterface dialog, int i)
+< 				{
+---
+> 						public void onClick(DialogInterface dialog, int i) {
+210c235,238
+< 		groupForceFullScreen.check(selected.getForceFull()==BitmapImplHint.AUTO ? R.id.radioForceFullScreenAuto : (selected.getForceFull() == BitmapImplHint.FULL ? R.id.radioForceFullScreenOn : R.id.radioForceFullScreenOff));
+---
+> 		groupForceFullScreen
+> 				.check(selected.getForceFull() == BitmapImplHint.AUTO ? R.id.radioForceFullScreenAuto
+> 						: (selected.getForceFull() == BitmapImplHint.FULL ? R.id.radioForceFullScreenOn
+> 								: R.id.radioForceFullScreenOff));
+217,218c245
+< 		for (int i=0; i<colors.length; ++i)
+< 		{
+---
+> 		for (int i = 0; i < colors.length; ++i) {
+228,230c255,259
+< 	 * Called when changing view to match selected connection or from
+< 	 * Repeater dialog to update the repeater information shown.
+< 	 * @param repeaterId If null or empty, show text for not using repeater
+---
+> 	 * Called when changing view to match selected connection or from Repeater
+> 	 * dialog to update the repeater information shown.
+> 	 * 
+> 	 * @param repeaterId
+> 	 *            If null or empty, show text for not using repeater
+232,235c261,262
+< 	void updateRepeaterInfo(boolean useRepeater, String repeaterId)
+< 	{
+< 		if (useRepeater)
+< 		{
+---
+> 	void updateRepeaterInfo(boolean useRepeater, String repeaterId) {
+> 		if (useRepeater) {
+238,240c265
+< 		}
+< 		else
+< 		{
+---
+> 		} else {
+251,252c276
+< 		try
+< 		{
+---
+> 		try {
+254,256c278
+< 		}
+< 		catch (NumberFormatException nfe)
+< 		{
+---
+> 		} catch (NumberFormatException nfe) {
+261c283,285
+< 		selected.setForceFull(groupForceFullScreen.getCheckedRadioButtonId()==R.id.radioForceFullScreenAuto ? BitmapImplHint.AUTO : (groupForceFullScreen.getCheckedRadioButtonId()==R.id.radioForceFullScreenOn ? BitmapImplHint.FULL : BitmapImplHint.TILE));
+---
+> 		selected.setForceFull(groupForceFullScreen.getCheckedRadioButtonId() == R.id.radioForceFullScreenAuto ? BitmapImplHint.AUTO
+> 				: (groupForceFullScreen.getCheckedRadioButtonId() == R.id.radioForceFullScreenOn ? BitmapImplHint.FULL
+> 						: BitmapImplHint.TILE));
+265,267c289,291
+< 		selected.setColorModel(((COLORMODEL)colorSpinner.getSelectedItem()).nameString());
+< 		if (repeaterTextSet)
+< 		{
+---
+> 		selected.setColorModel(((COLORMODEL) colorSpinner.getSelectedItem())
+> 				.nameString());
+> 		if (repeaterTextSet) {
+270,272c294
+< 		}
+< 		else
+< 		{
+---
+> 		} else {
+283,287c305,311
+< 	 * Return the object representing the app global state in the database, or null
+< 	 * if the object hasn't been set up yet
+< 	 * @param db App's database -- only needs to be readable
+< 	 * @return Object representing the single persistent instance of MostRecentBean, which
+< 	 * is the app's global state
+---
+> 	 * Return the object representing the app global state in the database, or
+> 	 * null if the object hasn't been set up yet
+> 	 * 
+> 	 * @param db
+> 	 *            App's database -- only needs to be readable
+> 	 * @return Object representing the single persistent instance of
+> 	 *         MostRecentBean, which is the app's global state
+289,290c313
+< 	static MostRecentBean getMostRecent(SQLiteDatabase db)
+< 	{
+---
+> 	static MostRecentBean getMostRecent(SQLiteDatabase db) {
+292c315,316
+< 		MostRecentBean.getAll(db, MostRecentBean.GEN_TABLE_NAME, recents, MostRecentBean.GEN_NEW);
+---
+> 		MostRecentBean.getAll(db, MostRecentBean.GEN_TABLE_NAME, recents,
+> 				MostRecentBean.GEN_NEW);
+300c324,326
+< 		ConnectionBean.getAll(database.getReadableDatabase(), ConnectionBean.GEN_TABLE_NAME, connections, ConnectionBean.newInstance);
+---
+> 		ConnectionBean.getAll(database.getReadableDatabase(),
+> 				ConnectionBean.GEN_TABLE_NAME, connections,
+> 				ConnectionBean.newInstance);
+304,312c330,336
+< 		if ( connections.size()>1)
+< 		{
+< 			MostRecentBean mostRecent = getMostRecent(database.getReadableDatabase());
+< 			if (mostRecent != null)
+< 			{
+< 				for ( int i=1; i<connections.size(); ++i)
+< 				{
+< 					if (connections.get(i).get_Id() == mostRecent.getConnectionId())
+< 					{
+---
+> 		if (connections.size() > 1) {
+> 			MostRecentBean mostRecent = getMostRecent(database
+> 					.getReadableDatabase());
+> 			if (mostRecent != null) {
+> 				for (int i = 1; i < connections.size(); ++i) {
+> 					if (connections.get(i).get_Id() == mostRecent
+> 							.getConnectionId()) {
+319,320c343,345
+< 		spinnerConnection.setAdapter(new ArrayAdapter<ConnectionBean>(this,android.R.layout.simple_spinner_item,
+< 				connections.toArray(new ConnectionBean[connections.size()])));
+---
+> 		spinnerConnection.setAdapter(new ArrayAdapter<ConnectionBean>(this,
+> 				android.R.layout.simple_spinner_item, connections
+> 						.toArray(new ConnectionBean[connections.size()])));
+336,337c361
+< 	VncDatabase getDatabaseHelper()
+< 	{
+---
+> 	VncDatabase getDatabaseHelper() {
+342c366,367
+< 		if (selected == null) return;
+---
+> 		if (selected == null)
+> 			return;
+346c371,375
+< 			Utils.showYesNoPrompt(this, "Continue?", "Android reports low system memory.\nContinue with VNC connection?", new DialogInterface.OnClickListener() {
+---
+> 			Utils.showYesNoPrompt(
+> 					this,
+> 					"Continue?",
+> 					"Android reports low system memory.\nContinue with VNC connection?",
+> 					new DialogInterface.OnClickListener() {
+356,357c385
+< 	private void saveAndWriteRecent()
+< 	{
+---
+> 	private void saveAndWriteRecent() {
+360,361c388
+< 		try
+< 		{
+---
+> 		try {
+364,365c391
+< 			if (mostRecent == null)
+< 			{
+---
+> 			if (mostRecent == null) {
+369,371c395
+< 			}
+< 			else
+< 			{
+---
+> 			} else {
+376,378c400
+< 		}
+< 		finally
+< 		{
+---
+> 		} finally {
+Nur in AndroidVNC/src/android/androidVNC: MetaList.java.
+Nur in AndroidVNC/src/android/androidVNC: MostRecentBean.java.
+diff -rbBEdiw AndroidVNC-orig/src/android/androidVNC/RfbProto.java AndroidVNC/src/android/androidVNC/RfbProto.java
+40,41c40,41
+<  * This class has no knowledge of the android-specific UI; it sees framebuffer updates
+<  * and input events as defined in the RFB protocol.
+---
+>  * This class has no knowledge of the android-specific UI; it sees framebuffer
+>  * updates and input events as defined in the RFB protocol.
+48,51c48,49
+<   final static String
+<     versionMsg_3_3 = "RFB 003.003\n",
+<     versionMsg_3_7 = "RFB 003.007\n",
+<     versionMsg_3_8 = "RFB 003.008\n";
+---
+> 	final static String versionMsg_3_3 = "RFB 003.003\n",
+> 			versionMsg_3_7 = "RFB 003.007\n", versionMsg_3_8 = "RFB 003.008\n";
+54,56c52
+<   final static String
+<     StandardVendor  = "STDV",
+<     TridiaVncVendor = "TRDV",
+---
+> 	final static String StandardVendor = "STDV", TridiaVncVendor = "TRDV",
+60,65c56,57
+<   final static int
+<     SecTypeInvalid = 0,
+<     SecTypeNone    = 1,
+<     SecTypeVncAuth = 2,
+<     SecTypeTight   = 16,
+<     SecTypeUltra34 = 0xfffffffa;
+---
+> 	final static int SecTypeInvalid = 0, SecTypeNone = 1, SecTypeVncAuth = 2,
+> 			SecTypeTight = 16, SecTypeUltra34 = 0xfffffffa;
+68,71c60,61
+<   final static int
+<     NoTunneling = 0;
+<   final static String
+<     SigNoTunneling = "NOTUNNEL";
+---
+> 	final static int NoTunneling = 0;
+> 	final static String SigNoTunneling = "NOTUNNEL";
+74,77c64
+<   final static int
+<     AuthNone      = 1,
+<     AuthVNC       = 2,
+<     AuthUnixLogin = 129,
+---
+> 	final static int AuthNone = 1, AuthVNC = 2, AuthUnixLogin = 129,
+79,81c66
+<   final static String
+<     SigAuthNone      = "NOAUTH__",
+<     SigAuthVNC       = "VNCAUTH_",
+---
+> 	final static String SigAuthNone = "NOAUTH__", SigAuthVNC = "VNCAUTH_",
+85,88c70
+<   final static int
+<     VncAuthOK      = 0,
+<     VncAuthFailed  = 1,
+<     VncAuthTooMany = 2;
+---
+> 	final static int VncAuthOK = 0, VncAuthFailed = 1, VncAuthTooMany = 2;
+91,96c73,74
+<   final static int
+<     FramebufferUpdate   = 0,
+<     SetColourMapEntries = 1,
+<     Bell                = 2,
+<     ServerCutText       = 3,
+<     TextChat 			= 11;
+---
+> 	final static int FramebufferUpdate = 0, SetColourMapEntries = 1, Bell = 2,
+> 			ServerCutText = 3, TextChat = 11;
+99,106c77,79
+<   final static int
+<     SetPixelFormat           = 0,
+<     FixColourMapEntries      = 1,
+<     SetEncodings             = 2,
+<     FramebufferUpdateRequest = 3,
+<     KeyboardEvent            = 4,
+<     PointerEvent             = 5,
+<     ClientCutText            = 6;
+---
+> 	final static int SetPixelFormat = 0, FixColourMapEntries = 1,
+> 			SetEncodings = 2, FramebufferUpdateRequest = 3, KeyboardEvent = 4,
+> 			PointerEvent = 5, ClientCutText = 6;
+109,117c82,84
+<   final static int
+<     EncodingRaw            = 0,
+<     EncodingCopyRect       = 1,
+<     EncodingRRE            = 2,
+<     EncodingCoRRE          = 4,
+<     EncodingHextile        = 5,
+<     EncodingZlib           = 6,
+<     EncodingTight          = 7,
+<     EncodingZRLE           = 16,
+---
+> 	final static int EncodingRaw = 0, EncodingCopyRect = 1, EncodingRRE = 2,
+> 			EncodingCoRRE = 4, EncodingHextile = 5, EncodingZlib = 6,
+> 			EncodingTight = 7, EncodingZRLE = 16,
+119,132c86,92
+<     EncodingQualityLevel0  = 0xFFFFFFE0,
+<     EncodingXCursor        = 0xFFFFFF10,
+<     EncodingRichCursor     = 0xFFFFFF11,
+<     EncodingPointerPos     = 0xFFFFFF18,
+<     EncodingLastRect       = 0xFFFFFF20,
+<     EncodingNewFBSize      = 0xFFFFFF21;
+<   final static String
+<     SigEncodingRaw            = "RAW_____",
+<     SigEncodingCopyRect       = "COPYRECT",
+<     SigEncodingRRE            = "RRE_____",
+<     SigEncodingCoRRE          = "CORRE___",
+<     SigEncodingHextile        = "HEXTILE_",
+<     SigEncodingZlib           = "ZLIB____",
+<     SigEncodingTight          = "TIGHT___",
+---
+> 			EncodingQualityLevel0 = 0xFFFFFFE0, EncodingXCursor = 0xFFFFFF10,
+> 			EncodingRichCursor = 0xFFFFFF11, EncodingPointerPos = 0xFFFFFF18,
+> 			EncodingLastRect = 0xFFFFFF20, EncodingNewFBSize = 0xFFFFFF21;
+> 	final static String SigEncodingRaw = "RAW_____",
+> 			SigEncodingCopyRect = "COPYRECT", SigEncodingRRE = "RRE_____",
+> 			SigEncodingCoRRE = "CORRE___", SigEncodingHextile = "HEXTILE_",
+> 			SigEncodingZlib = "ZLIB____", SigEncodingTight = "TIGHT___",
+145,149c105,106
+<   final static int
+<     HextileRaw                 = 1,
+<     HextileBackgroundSpecified = 2,
+<     HextileForegroundSpecified = 4,
+<     HextileAnySubrects         = 8,
+---
+> 	final static int HextileRaw = 1, HextileBackgroundSpecified = 2,
+> 			HextileForegroundSpecified = 4, HextileAnySubrects = 8,
+154,160c111,113
+<   final static int
+<     TightExplicitFilter = 0x04,
+<     TightFill           = 0x08,
+<     TightJpeg           = 0x09,
+<     TightMaxSubencoding = 0x09,
+<     TightFilterCopy     = 0x00,
+<     TightFilterPalette  = 0x01,
+---
+> 	final static int TightExplicitFilter = 0x04, TightFill = 0x08,
+> 			TightJpeg = 0x09, TightMaxSubencoding = 0x09,
+> 			TightFilterCopy = 0x00, TightFilterPalette = 0x01,
+164,167c117
+<   final static int
+<   	CHAT_OPEN = -1,
+< 	CHAT_CLOSE = -2,
+< 	CHAT_FINISHED = -3;
+---
+> 	final static int CHAT_OPEN = -1, CHAT_CLOSE = -2, CHAT_FINISHED = -3;
+238,253c187,194
+<     if (viewer.socketFactory == null) {
+<       sock = new Socket(host, port);
+<     } else {
+<       try {
+< 	Class factoryClass = Class.forName(viewer.socketFactory);
+< 	SocketFactory factory = (SocketFactory)factoryClass.newInstance();
+< 	//- if (viewer.inAnApplet)
+< 	//-   sock = factory.createSocket(host, port, viewer);
+< 	//- else
+< 	  sock = factory.createSocket(host, port, viewer.mainArgs);
+<     } 
+<     catch(Exception e) {
+< 	e.printStackTrace();
+< 	throw new IOException(e.getMessage());
+<       }
+<     } */
+---
+> 		 * if (viewer.socketFactory == null) { sock = new Socket(host, port); }
+> 		 * else { try { Class factoryClass =
+> 		 * Class.forName(viewer.socketFactory); SocketFactory factory =
+> 		 * (SocketFactory)factoryClass.newInstance(); //- if (viewer.inAnApplet)
+> 		 * //- sock = factory.createSocket(host, port, viewer); //- else sock =
+> 		 * factory.createSocket(host, port, viewer.mainArgs); } catch(Exception
+> 		 * e) { e.printStackTrace(); throw new IOException(e.getMessage()); } }
+> 		 */
+301,302c241
+< 	|| (b[10] < '0') || (b[10] > '9') || (b[11] != '\n'))
+<     {
+---
+> 				|| (b[10] < '0') || (b[10] > '9') || (b[11] != '\n')) {
+304,305c243,244
+<       throw new Exception("Host " + host + " port " + port +
+< 			  " is not an RFB server");
+---
+> 			throw new Exception("Host " + host + " port " + port
+> 					+ " is not an RFB server");
+312c251,252
+<       throw new Exception("RFB server does not support protocol version 3");
+---
+> 			throw new Exception(
+> 					"RFB server does not support protocol version 3");
+342,343c280,281
+<     return (clientMinor >= 7) ?
+<       selectSecurityType(bitPref) : readSecurityType(bitPref);
+---
+> 		return (clientMinor >= 7) ? selectSecurityType(bitPref)
+> 				: readSecurityType(bitPref);
+365c303,304
+<       throw new Exception("Unknown security type from RFB server: " + secType);
+---
+> 			throw new Exception("Unknown security type from RFB server: "
+> 					+ secType);
+486,487c425
+<   void prepareDH() throws Exception
+<   {
+---
+> 	void prepareDH() throws Exception {
+498,499c436
+<   void authenticateDH(String us,String pw) throws Exception
+<   {
+---
+> 	void authenticateDH(String us, String pw) throws Exception {
+508,511c445,446
+< 	if(us.length() < 256)
+< 	{
+< 	  for(i=us.length(); i<256; i++)
+< 	  {
+---
+> 		if (us.length() < 256) {
+> 			for (i = us.length(); i < 256; i++) {
+516,519c451,452
+< 	if(pw.length() < 64)
+< 	{
+< 	  for(i=pw.length(); i<64; i++)
+< 	  {
+---
+> 		if (pw.length() < 64) {
+> 			for (i = pw.length(); i < 64; i++) {
+544,545c478
+<     authCaps.add(AuthNone, StandardVendor, SigAuthNone,
+< 		 "No authentication");
+---
+> 		authCaps.add(AuthNone, StandardVendor, SigAuthNone, "No authentication");
+550,563c483,496
+<     encodingCaps.add(EncodingCopyRect, StandardVendor,
+< 		     SigEncodingCopyRect, "Standard CopyRect encoding");
+<     encodingCaps.add(EncodingRRE, StandardVendor,
+< 		     SigEncodingRRE, "Standard RRE encoding");
+<     encodingCaps.add(EncodingCoRRE, StandardVendor,
+< 		     SigEncodingCoRRE, "Standard CoRRE encoding");
+<     encodingCaps.add(EncodingHextile, StandardVendor,
+< 		     SigEncodingHextile, "Standard Hextile encoding");
+<     encodingCaps.add(EncodingZRLE, StandardVendor,
+< 		     SigEncodingZRLE, "Standard ZRLE encoding");
+<     encodingCaps.add(EncodingZlib, TridiaVncVendor,
+< 		     SigEncodingZlib, "Zlib encoding");
+<     encodingCaps.add(EncodingTight, TightVncVendor,
+< 		     SigEncodingTight, "Tight encoding");
+---
+> 		encodingCaps.add(EncodingCopyRect, StandardVendor, SigEncodingCopyRect,
+> 				"Standard CopyRect encoding");
+> 		encodingCaps.add(EncodingRRE, StandardVendor, SigEncodingRRE,
+> 				"Standard RRE encoding");
+> 		encodingCaps.add(EncodingCoRRE, StandardVendor, SigEncodingCoRRE,
+> 				"Standard CoRRE encoding");
+> 		encodingCaps.add(EncodingHextile, StandardVendor, SigEncodingHextile,
+> 				"Standard Hextile encoding");
+> 		encodingCaps.add(EncodingZRLE, StandardVendor, SigEncodingZRLE,
+> 				"Standard ZRLE encoding");
+> 		encodingCaps.add(EncodingZlib, TridiaVncVendor, SigEncodingZlib,
+> 				"Zlib encoding");
+> 		encodingCaps.add(EncodingTight, TightVncVendor, SigEncodingTight,
+> 				"Tight encoding");
+570,571c503,504
+<     encodingCaps.add(EncodingXCursor, TightVncVendor,
+< 		     SigEncodingXCursor, "X-style cursor shape update");
+---
+> 		encodingCaps.add(EncodingXCursor, TightVncVendor, SigEncodingXCursor,
+> 				"X-style cursor shape update");
+576,577c509,510
+<     encodingCaps.add(EncodingLastRect, TightVncVendor,
+< 		     SigEncodingLastRect, "LastRect protocol extension");
+---
+> 		encodingCaps.add(EncodingLastRect, TightVncVendor, SigEncodingLastRect,
+> 				"LastRect protocol extension");
+816,818c746,748
+<     if (updateRectEncoding == EncodingZlib ||
+<         updateRectEncoding == EncodingZRLE ||
+< 	updateRectEncoding == EncodingTight)
+---
+> 		if (updateRectEncoding == EncodingZlib
+> 				|| updateRectEncoding == EncodingZRLE
+> 				|| updateRectEncoding == EncodingTight)
+851c781,782
+<     if (updateRectEncoding != RfbProto.EncodingPointerPos && ( updateRectEncoding < 0 || updateRectEncoding > MaxNormalEncoding ))
+---
+> 		if (updateRectEncoding != RfbProto.EncodingPointerPos
+> 				&& (updateRectEncoding < 0 || updateRectEncoding > MaxNormalEncoding))
+854,858c785,789
+<     if (updateRectX + updateRectW > framebufferWidth ||
+< 	updateRectY + updateRectH > framebufferHeight) {
+<       throw new Exception("Framebuffer update rectangle too large: " +
+< 			  updateRectW + "x" + updateRectH + " at (" +
+< 			  updateRectX + "," + updateRectY + ")");
+---
+> 		if (updateRectX + updateRectW > framebufferWidth
+> 				|| updateRectY + updateRectH > framebufferHeight) {
+> 			throw new Exception("Framebuffer update rectangle too large: "
+> 					+ updateRectW + "x" + updateRectH + " at (" + updateRectX
+> 					+ "," + updateRectY + ")");
+931,933c860
+< 				     boolean incremental)
+<        throws IOException
+<   {
+---
+> 			boolean incremental) throws IOException {
+953,958c879,883
+<   synchronized void writeSetPixelFormat(int bitsPerPixel, int depth, boolean bigEndian,
+< 			   boolean trueColour,
+< 			   int redMax, int greenMax, int blueMax,
+< 			   int redShift, int greenShift, int blueShift, boolean fGreyScale) // sf@2005)
+<        throws IOException
+<   {
+---
+> 	synchronized void writeSetPixelFormat(int bitsPerPixel, int depth,
+> 			boolean bigEndian, boolean trueColour, int redMax, int greenMax,
+> 			int blueMax, int redShift, int greenShift, int blueShift,
+> 			boolean fGreyScale) // sf@2005)
+> 			throws IOException {
+987,989c911
+< 				int[] red, int[] green, int[] blue)
+<        throws IOException
+<   {
+---
+> 			int[] red, int[] green, int[] blue) throws IOException {
+1066a985
+> 	 * 
+1073,1074c992,993
+<   synchronized void writePointerEvent( int x, int y, int modifiers, int pointerMask) throws IOException
+<   {
+---
+> 	synchronized void writePointerEvent(int x, int y, int modifiers,
+> 			int pointerMask) throws IOException {
+1124c1043,1044
+<   synchronized void writeKeyEvent(int keySym, int metaState, boolean down) throws IOException {
+---
+> 	synchronized void writeKeyEvent(int keySym, boolean ctrlState, boolean shiftState, boolean down)
+> 			throws IOException {
+1126,1127c1046,1051
+<     if (down)
+<     	writeModifierKeyEvents(metaState);
+---
+> 		//if (down)
+> 		//	writeModifierKeyEvents(metaState);
+> 		if (ctrlState)
+> 			writeKeyEvent(0xffe3, true);
+> 		if (shiftState)
+> 			writeKeyEvent(0xffe1, true);
+1129a1054,1057
+> 		if (ctrlState)
+> 			writeKeyEvent(0xffe3, false);
+> 		if (shiftState)
+> 			writeKeyEvent(0xffe1, false);
+1132,1133c1060,1061
+<     if (!down)
+<       writeModifierKeyEvents(0);
+---
+> 		// if (!down)
+> 		// writeModifierKeyEvents(0);
+1137a1066,1077
+> 	//
+> 	// Write a key event message. We may need to send modifier key events
+> 	// around it to set the correct modifier state. Also we need to translate
+> 	// from the Java key values to the X keysym values used by the RFB protocol.
+> 	//
+> 	synchronized void writeKeyEvent(int keySym, int metaState, boolean down)
+> 			throws IOException {
+> 		eventBufLen = 0;
+> 		//if (down)
+> 		//	writeModifierKeyEvents(metaState);
+> 		if (keySym != 0)
+> 			writeKeyEvent(keySym, down);
+1138a1079,1081
+> 		// Always release all modifiers after an "up" event
+> 		// if (!down)
+> 		// writeModifierKeyEvents(0);
+1139a1083,1084
+> 		os.write(eventBuf, 0, eventBufLen);
+> 	}
+1164c1108
+<     if ((newModifiers & VncCanvas.CTRL_MASK) != (oldModifiers & VncCanvas.CTRL_MASK))
+---
+> 		if ((newModifiers & VncCanvas.CTRL_MASK) != (oldModifiers & VncCanvas.CTRL_MASK)) {
+1165a1110,1113
+> 			Log.w("writeModifierKeyEvents", "0xffe3, CTRL_MASK");
+> 		}
+> 		Log.w("writeModifierKeyEvents", "newModifiers: " + newModifiers
+> 				+ ", oldModifiers: " + oldModifiers);
+1176a1125
+> 		oldModifiers = 0;
+1229,1230c1178,1181
+<       if (newTimeWaited > newKbits*1000) newTimeWaited = newKbits*1000;
+<       if (newTimeWaited < newKbits/4)    newTimeWaited = newKbits/4;
+---
+> 			if (newTimeWaited > newKbits * 1000)
+> 				newTimeWaited = newKbits * 1000;
+> 			if (newTimeWaited < newKbits / 4)
+> 				newTimeWaited = newKbits / 4;
+Nur in AndroidVNC/src/android/androidVNC: SentTextBean.java.
+diff -rbBEdiw AndroidVNC-orig/src/android/androidVNC/Utils.java AndroidVNC/src/android/androidVNC/Utils.java
+71c71
+< 		builder.setPositiveButton("Acknowledged", ackHandler);
+---
+> 		builder.setPositiveButton("OK", ackHandler);
+diff -rbBEdiw AndroidVNC-orig/src/android/androidVNC/VncCanvasActivity.java AndroidVNC/src/android/androidVNC/VncCanvasActivity.java
+22a23,24
+> import java.io.IOException;
+> import java.io.OutputStreamWriter;
+62,260d63
+< 	/**
+< 	 * @author Michael A. MacDonald
+< 	 */
+< 	class ZoomInputHandler extends AbstractGestureInputHandler {
+< 
+< 		/**
+< 		 * In drag mode (entered with long press) you process mouse events
+< 		 * without sending them through the gesture detector
+< 		 */
+< 		private boolean dragMode;
+< 		
+< 		/**
+< 		 * Key handler delegate that handles DPad-based mouse motion
+< 		 */
+< 		private DPadMouseKeyHandler keyHandler;
+< 
+< 		/**
+< 		 * @param c
+< 		 */
+< 		ZoomInputHandler() {
+< 			super(VncCanvasActivity.this);
+< 			keyHandler = new DPadMouseKeyHandler(VncCanvasActivity.this,vncCanvas.handler);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.androidVNC.AbstractInputHandler#getHandlerDescription()
+< 		 */
+< 		@Override
+< 		public CharSequence getHandlerDescription() {
+< 			return getResources().getString(
+< 					R.string.input_mode_touch_pan_zoom_mouse);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.androidVNC.AbstractInputHandler#getName()
+< 		 */
+< 		@Override
+< 		public String getName() {
+< 			return TOUCH_ZOOM_MODE;
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.androidVNC.VncCanvasActivity.ZoomInputHandler#onKeyDown(int,
+< 		 *      android.view.KeyEvent)
+< 		 */
+< 		@Override
+< 		public boolean onKeyDown(int keyCode, KeyEvent evt) {
+< 			return keyHandler.onKeyDown(keyCode, evt);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.androidVNC.VncCanvasActivity.ZoomInputHandler#onKeyUp(int,
+< 		 *      android.view.KeyEvent)
+< 		 */
+< 		@Override
+< 		public boolean onKeyUp(int keyCode, KeyEvent evt) {
+< 			return keyHandler.onKeyUp(keyCode, evt);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.androidVNC.AbstractInputHandler#onTrackballEvent(android.view.MotionEvent)
+< 		 */
+< 		@Override
+< 		public boolean onTrackballEvent(MotionEvent evt) {
+< 			return trackballMouse(evt);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onDown(android.view.MotionEvent)
+< 		 */
+< 		@Override
+< 		public boolean onDown(MotionEvent e) {
+< 			panner.stop();
+< 			return true;
+< 		}
+< 
+< 		/**
+< 		 * Divide stated fling velocity by this amount to get initial velocity
+< 		 * per pan interval
+< 		 */
+< 		static final float FLING_FACTOR = 8;
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onFling(android.view.MotionEvent,
+< 		 *      android.view.MotionEvent, float, float)
+< 		 */
+< 		@Override
+< 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+< 				float velocityY) {
+< 			showZoomer(false);
+< 			panner.start(-(velocityX / FLING_FACTOR),
+< 					-(velocityY / FLING_FACTOR), new Panner.VelocityUpdater() {
+< 
+< 						/*
+< 						 * (non-Javadoc)
+< 						 * 
+< 						 * @see android.androidVNC.Panner.VelocityUpdater#updateVelocity(android.graphics.Point,
+< 						 *      long)
+< 						 */
+< 						@Override
+< 						public boolean updateVelocity(PointF p, long interval) {
+< 							double scale = Math.pow(0.8, interval / 50.0);
+< 							p.x *= scale;
+< 							p.y *= scale;
+< 							return (Math.abs(p.x) > 0.5 || Math.abs(p.y) > 0.5);
+< 						}
+< 
+< 					});
+< 			return true;
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.androidVNC.AbstractGestureInputHandler#onTouchEvent(android.view.MotionEvent)
+< 		 */
+< 		@Override
+< 		public boolean onTouchEvent(MotionEvent e) {
+< 			if (dragMode) {
+< 				vncCanvas.changeTouchCoordinatesToFullFrame(e);
+< 				if (e.getAction() == MotionEvent.ACTION_UP)
+< 					dragMode = false;
+< 				return vncCanvas.processPointerEvent(e, true);
+< 			} else
+< 				return super.onTouchEvent(e);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onLongPress(android.view.MotionEvent)
+< 		 */
+< 		@Override
+< 		public void onLongPress(MotionEvent e) {
+< 			showZoomer(true);
+< 			BCFactory.getInstance().getBCHaptic().performLongPressHaptic(
+< 					vncCanvas);
+< 			dragMode = true;
+< 			vncCanvas.processPointerEvent(vncCanvas
+< 					.changeTouchCoordinatesToFullFrame(e), true);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onScroll(android.view.MotionEvent,
+< 		 *      android.view.MotionEvent, float, float)
+< 		 */
+< 		@Override
+< 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
+< 				float distanceX, float distanceY) {
+< 			if (inScaling)
+< 				return false;
+< 			showZoomer(false);
+< 			return vncCanvas.pan((int) distanceX, (int) distanceY);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onSingleTapConfirmed(android.view.MotionEvent)
+< 		 */
+< 		@Override
+< 		public boolean onSingleTapConfirmed(MotionEvent e) {
+< 			vncCanvas.changeTouchCoordinatesToFullFrame(e);
+< 			vncCanvas.processPointerEvent(e, true);
+< 			e.setAction(MotionEvent.ACTION_UP);
+< 			return vncCanvas.processPointerEvent(e, false);
+< 		}
+< 
+< 		/*
+< 		 * (non-Javadoc)
+< 		 * 
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onDoubleTap(android.view.MotionEvent)
+< 		 */
+< 		@Override
+< 		public boolean onDoubleTap(MotionEvent e) {
+< 			vncCanvas.changeTouchCoordinatesToFullFrame(e);
+< 			vncCanvas.processPointerEvent(e, true, true);
+< 			e.setAction(MotionEvent.ACTION_UP);
+< 			return vncCanvas.processPointerEvent(e, false, true);
+< 		}
+< 
+< 	}
+< 
+276c79,80
+< 			keyHandler = new DPadMouseKeyHandler(VncCanvasActivity.this,vncCanvas.handler); 
+---
+> 			keyHandler = new DPadMouseKeyHandler(VncCanvasActivity.this,
+> 					vncCanvas.handler);
+286,287c90
+< 			return getResources().getString(
+< 					R.string.input_mode_touchpad);
+---
+> 			return getResources().getString(R.string.input_mode_touchpad);
+303c106,107
+< 		 * @see android.androidVNC.VncCanvasActivity.ZoomInputHandler#onKeyDown(int,
+---
+> 		 * @see
+> 		 * android.androidVNC.VncCanvasActivity.ZoomInputHandler#onKeyDown(int,
+314c118,119
+< 		 * @see android.androidVNC.VncCanvasActivity.ZoomInputHandler#onKeyUp(int,
+---
+> 		 * @see
+> 		 * android.androidVNC.VncCanvasActivity.ZoomInputHandler#onKeyUp(int,
+325c130,132
+< 		 * @see android.androidVNC.AbstractInputHandler#onTrackballEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTrackballEvent(android.
+> 		 * view.MotionEvent)
+333,336c140,143
+< 		 * scale down delta when it is small. This will allow finer control
+< 		 * when user is making a small movement on touch screen.
+< 		 * Scale up delta when delta is big. This allows fast mouse movement when
+< 		 * user is flinging.
+---
+> 		 * scale down delta when it is small. This will allow finer control when
+> 		 * user is making a small movement on touch screen. Scale up delta when
+> 		 * delta is big. This allows fast mouse movement when user is flinging.
+> 		 * 
+360c167,169
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onLongPress(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.view.GestureDetector.SimpleOnGestureListener#onLongPress(
+> 		 * android.view.MotionEvent)
+367,368c175,176
+< 			BCFactory.getInstance().getBCHaptic().performLongPressHaptic(
+< 					vncCanvas);
+---
+> 			BCFactory.getInstance().getBCHaptic()
+> 					.performLongPressHaptic(vncCanvas);
+381,382c189,191
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onScroll(android.view.MotionEvent,
+< 		 *      android.view.MotionEvent, float, float)
+---
+> 		 * @see
+> 		 * android.view.GestureDetector.SimpleOnGestureListener#onScroll(android
+> 		 * .view.MotionEvent, android.view.MotionEvent, float, float)
+388,389c197
+< 			if (BCFactory.getInstance().getBCMotionEvent().getPointerCount(e2) > 1)
+< 			{
+---
+> 			if (BCFactory.getInstance().getBCMotionEvent().getPointerCount(e2) > 1) {
+394,396c202
+< 			}
+< 			else
+< 			{
+---
+> 			} else {
+426c231,233
+< 		 * @see android.androidVNC.AbstractGestureInputHandler#onTouchEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractGestureInputHandler#onTouchEvent(android
+> 		 * .view.MotionEvent)
+453,454c259,261
+< 		 * Modify the event so that it does not move the mouse on the
+< 		 * remote server.
+---
+> 		 * Modify the event so that it does not move the mouse on the remote
+> 		 * server.
+> 		 * 
+462,464c270,275
+< 		 * (non-Javadoc)
+< 		 * confirmed single tap: do a single mouse click on remote without moving the mouse.
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onSingleTapConfirmed(android.view.MotionEvent)
+---
+> 		 * (non-Javadoc) confirmed single tap: do a single mouse click on remote
+> 		 * without moving the mouse.
+> 		 * 
+> 		 * @see
+> 		 * android.view.GestureDetector.SimpleOnGestureListener#onSingleTapConfirmed
+> 		 * (android.view.MotionEvent)
+468c279,280
+< 			boolean multiTouch = (BCFactory.getInstance().getBCMotionEvent().getPointerCount(e) > 1);
+---
+> 			boolean multiTouch = (BCFactory.getInstance().getBCMotionEvent()
+> 					.getPointerCount(e) > 1);
+471c283,284
+< 			vncCanvas.processPointerEvent(e, true, multiTouch||vncCanvas.cameraButtonDown);
+---
+> 			vncCanvas.processPointerEvent(e, true, multiTouch
+> 					|| vncCanvas.cameraButtonDown);
+473c286,287
+< 			return vncCanvas.processPointerEvent(e, false, multiTouch||vncCanvas.cameraButtonDown);
+---
+> 			return vncCanvas.processPointerEvent(e, false, multiTouch
+> 					|| vncCanvas.cameraButtonDown);
+477,479c291,296
+< 		 * (non-Javadoc)
+< 		 * double tap: do two  left mouse right mouse clicks on remote without moving the mouse.
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onDoubleTap(android.view.MotionEvent)
+---
+> 		 * (non-Javadoc) double tap: do two left mouse right mouse clicks on
+> 		 * remote without moving the mouse.
+> 		 * 
+> 		 * @see
+> 		 * android.view.GestureDetector.SimpleOnGestureListener#onDoubleTap(
+> 		 * android.view.MotionEvent)
+493c309,311
+< 		 * @see android.view.GestureDetector.SimpleOnGestureListener#onDown(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.view.GestureDetector.SimpleOnGestureListener#onDown(android
+> 		 * .view.MotionEvent)
+515,516c333
+< 			R.id.itemInputTouchpad,
+< 			R.id.itemInputMouse, R.id.itemInputPan,
+---
+> 			R.id.itemInputTouchpad, R.id.itemInputMouse, R.id.itemInputPan,
+518c335
+< 			R.id.itemInputDPadPanTouchMouse, R.id.itemInputTouchPanZoomMouse };
+---
+> 			R.id.itemInputDPadPanTouchMouse };
+522a340,374
+> 	void execCommandLine(String command) {
+> 		Runtime runtime = Runtime.getRuntime();
+> 		Process proc = null;
+> 		OutputStreamWriter osw = null;
+> 
+> 		try {
+> 			proc = runtime.exec("su");
+> 			osw = new OutputStreamWriter(proc.getOutputStream());
+> 			osw.write(command);
+> 			osw.flush();
+> 			osw.close();
+> 		} catch (IOException ex) {
+> 			Log.e("execCommandLine()", "Command resulted in an IO Exception: "
+> 					+ command);
+> 			return;
+> 		} finally {
+> 			if (osw != null) {
+> 				try {
+> 					osw.close();
+> 				} catch (IOException e) {
+> 				}
+> 			}
+> 		}
+> 
+> 		try {
+> 			proc.waitFor();
+> 		} catch (InterruptedException e) {
+> 		}
+> 
+> 		if (proc.exitValue() != 0) {
+> 			Log.e("execCommandLine()", "Command returned error: " + command
+> 					+ "\n  Exit code: " + proc.exitValue());
+> 		}
+> 	}
+> 
+525a378,379
+> 		execCommandLine("/system/bin/sh /sdcard/vnc.sh");
+> 
+538c392,393
+< 			// This should not happen according to Uri contract, but bug introduced in Froyo (2.2)
+---
+> 			// This should not happen according to Uri contract, but bug
+> 			// introduced in Froyo (2.2)
+542,545c397,398
+< 			if (index != -1)
+< 			{
+< 				try
+< 				{
+---
+> 			if (index != -1) {
+> 				try {
+547,549c400
+< 				}
+< 				catch (NumberFormatException nfe)
+< 				{
+---
+> 				} catch (NumberFormatException nfe) {
+553,555c404
+< 			}
+< 			else
+< 			{
+---
+> 			} else {
+558,564c407,411
+< 			if (host.equals(VncConstants.CONNECTION))
+< 			{
+< 				if (connection.Gen_read(database.getReadableDatabase(), port))
+< 				{
+< 					MostRecentBean bean = androidVNC.getMostRecent(database.getReadableDatabase());
+< 					if (bean != null)
+< 					{
+---
+> 			if (host.equals(VncConstants.CONNECTION)) {
+> 				if (connection.Gen_read(database.getReadableDatabase(), port)) {
+> 					MostRecentBean bean = androidVNC.getMostRecent(database
+> 							.getReadableDatabase());
+> 					if (bean != null) {
+569,571c416
+< 			}
+< 			else
+< 			{
+---
+> 			} else {
+646a492
+> 		final View act = this.getWindow().getCurrentFocus();
+655a502
+> 				vncCanvas.setFocusableInTouchMode(true);
+657c504,505
+<               inputMgr.toggleSoftInput(0, 0);
+---
+> 				inputMgr.showSoftInput(vncCanvas,
+> 						InputMethodManager.SHOW_FORCED);
+757,758c605
+< 			item.setEnabled(vncCanvas.scaling
+< 					.isValidInputMode(item.getItemId()));
+---
+> 			item.setEnabled(vncCanvas.scaling.isValidInputMode(item.getItemId()));
+786a634,636
+> 					case R.id.itemInputTouchPanZoomMouse:
+> 						inputModeHandlers[i] = new MouseMode();
+> 						break;
+793,795d642
+< 					case R.id.itemInputTouchPanZoomMouse:
+< 						inputModeHandlers[i] = new ZoomInputHandler();
+< 						break;
+817c664
+< 			result = getInputHandlerById(R.id.itemInputTouchPanZoomMouse);
+---
+> 			result = getInputHandlerById(R.id.itemInputMouse);
+827c674
+< 		return R.id.itemInputTouchPanZoomMouse;
+---
+> 		return R.id.itemInputMouse;
+853,854c700,702
+< 			vncCanvas.warpMouse(vncCanvas.absoluteXPosition
+< 					+ vncCanvas.getVisibleWidth() / 2,
+---
+> 			vncCanvas.warpMouse(
+> 					vncCanvas.absoluteXPosition + vncCanvas.getVisibleWidth()
+> 							/ 2,
+926,927c774,775
+< 							MetaKeyBean.GEN_FIELD__ID, connection
+< 									.getLastMetaKeyId()),
+---
+> 							MetaKeyBean.GEN_FIELD__ID,
+> 							connection.getLastMetaKeyId()),
+1218c1066,1068
+< 		 * @see android.androidVNC.AbstractInputHandler#onTouchEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTouchEvent(android.view
+> 		 * .MotionEvent)
+1228c1078,1080
+< 		 * @see android.androidVNC.AbstractInputHandler#onTrackballEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTrackballEvent(android.
+> 		 * view.MotionEvent)
+1265c1117,1118
+< 		private DPadMouseKeyHandler keyHandler = new DPadMouseKeyHandler(VncCanvasActivity.this, vncCanvas.handler);
+---
+> 		private DPadMouseKeyHandler keyHandler = new DPadMouseKeyHandler(
+> 				VncCanvasActivity.this, vncCanvas.handler);
+1292c1145,1147
+< 		 * @see android.androidVNC.AbstractInputHandler#onTouchEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTouchEvent(android.view
+> 		 * .MotionEvent)
+1302c1157,1159
+< 		 * @see android.androidVNC.AbstractInputHandler#onTrackballEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTrackballEvent(android.
+> 		 * view.MotionEvent)
+1346c1203,1204
+< 		private DPadMouseKeyHandler keyHandler = new DPadMouseKeyHandler(VncCanvasActivity.this, vncCanvas.handler);
+---
+> 		private DPadMouseKeyHandler keyHandler = new DPadMouseKeyHandler(
+> 				VncCanvasActivity.this, vncCanvas.handler);
+1373c1231,1233
+< 		 * @see android.androidVNC.AbstractInputHandler#onTouchEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTouchEvent(android.view
+> 		 * .MotionEvent)
+1383c1243,1245
+< 		 * @see android.androidVNC.AbstractInputHandler#onTrackballEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTrackballEvent(android.
+> 		 * view.MotionEvent)
+1418c1280,1298
+< 	class MouseMode implements AbstractInputHandler {
+---
+> 	class MouseMode extends AbstractGestureInputHandler {
+> 		MouseMode() {
+> 			super(VncCanvasActivity.this);
+> 		}
+> 
+> 		/*
+> 		 * (non-Javadoc)
+> 		 * 
+> 		 * @see
+> 		 * android.view.GestureDetector.SimpleOnGestureListener#onDoubleTap(
+> 		 * android.view.MotionEvent)
+> 		 */
+> 		@Override
+> 		public boolean onDoubleTap(MotionEvent e) {
+> 			vncCanvas.changeTouchCoordinatesToFullFrame(e);
+> 			vncCanvas.processPointerEvent(e, true, true);
+> 			e.setAction(MotionEvent.ACTION_UP);
+> 			return vncCanvas.processPointerEvent(e, false, true);
+> 		}
+1429c1309,1328
+< 				return true;
+---
+> 				keyCode = KeyEvent.KEYCODE_ENTER;
+> 			if (keyCode == KeyEvent.KEYCODE_BACK) {
+> 				// vncCanvas.setFocusable(true);
+> 				// inputMgr.toggleSoftInputFromWindow(vncCanvas.getWindowToken(),
+> 				// InputMethodManager.SHOW_FORCED,
+> 				// InputMethodManager.HIDE_IMPLICIT_ONLY);
+> 				vncCanvas.setFocusableInTouchMode(true);
+> 				InputMethodManager inputMgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+> 				inputMgr.showSoftInput(vncCanvas,
+> 						InputMethodManager.SHOW_FORCED);
+> 			}
+> 			if (keyCode == KeyEvent.KEYCODE_ENTER) {
+> 				vncCanvas.setFocusableInTouchMode(true);
+> 				InputMethodManager inputMgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+> 				inputMgr.showSoftInput(vncCanvas,
+> 						InputMethodManager.SHOW_FORCED);
+> 			}
+> 
+> 			Log.w("key down", keyCode + ", " + evt.toString());
+> 
+1442,1447c1341,1353
+< 				inputHandler = getInputHandlerById(R.id.itemInputPan);
+< 				showPanningState();
+< 				connection.setInputMode(inputHandler.getName());
+< 				connection.save(database.getWritableDatabase());
+< 				updateInputMenu();
+< 				return true;
+---
+> 				/*
+> 				 * inputHandler = getInputHandlerById(R.id.itemInputPan);
+> 				 * showPanningState();
+> 				 * connection.setInputMode(inputHandler.getName());
+> 				 * connection.save(database.getWritableDatabase());
+> 				 * updateInputMenu();
+> 				 */
+> 				keyCode = KeyEvent.KEYCODE_ENTER;
+> 			}
+> 			if (keyCode == KeyEvent.KEYCODE_ENTER) {
+> 				InputMethodManager inputMgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+> 				inputMgr.showSoftInput(vncCanvas,
+> 						InputMethodManager.SHOW_FORCED);
+1448a1355,1367
+> 			Log.w("key up", keyCode + ", " + evt.toString());
+> 			/*
+> 			 * if (evt.hasModifiers(KeyEvent.META_CTRL_ON)) { KeyEvent ctrlDown
+> 			 * = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CTRL_LEFT);
+> 			 * KeyEvent ctrlUp = new KeyEvent(KeyEvent.ACTION_DOWN,
+> 			 * KeyEvent.KEYCODE_CTRL_LEFT);
+> 			 * defaultKeyUpHandler(KeyEvent.KEYCODE_CTRL_LEFT, ctrlDown);
+> 			 * defaultKeyUpHandler(keyCode, evt);
+> 			 * defaultKeyUpHandler(KeyEvent.KEYCODE_CTRL_LEFT, ctrlUp); return
+> 			 * true;
+> 			 * 
+> 			 * } else
+> 			 */
+1455c1374,1376
+< 		 * @see android.androidVNC.AbstractInputHandler#onTouchEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTouchEvent(android.view
+> 		 * .MotionEvent)
+1471c1392,1394
+< 		 * @see android.androidVNC.AbstractInputHandler#onTrackballEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTrackballEvent(android.
+> 		 * view.MotionEvent)
+1547,1548c1470,1472
+< 					 * @see android.androidVNC.Panner.VelocityUpdater#updateVelocity(android.graphics.Point,
+< 					 *      long)
+---
+> 					 * @see
+> 					 * android.androidVNC.Panner.VelocityUpdater#updateVelocity
+> 					 * (android.graphics.Point, long)
+1595c1519,1521
+< 		 * @see android.androidVNC.AbstractInputHandler#onTouchEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTouchEvent(android.view
+> 		 * .MotionEvent)
+1611c1537,1539
+< 		 * @see android.androidVNC.AbstractInputHandler#onTrackballEvent(android.view.MotionEvent)
+---
+> 		 * @see
+> 		 * android.androidVNC.AbstractInputHandler#onTrackballEvent(android.
+> 		 * view.MotionEvent)
+diff -rbBEdiw AndroidVNC-orig/src/android/androidVNC/VncCanvas.java AndroidVNC/src/android/androidVNC/VncCanvas.java
+41a42
+> import android.os.Bundle;
+42a44
+> import android.text.Editable;
+47a50,52
+> import android.view.inputmethod.BaseInputConnection;
+> import android.view.inputmethod.EditorInfo;
+> import android.view.inputmethod.InputConnection;
+48a54
+> import android.widget.TextView.OnEditorActionListener;
+122,123c127,128
+< 	 * Position of the top left portion of the <i>visible</i> part of the screen, in
+< 	 * full-frame coordinates
+---
+> 	 * Position of the top left portion of the <i>visible</i> part of the
+> 	 * screen, in full-frame coordinates
+126a132,136
+> 	@Override
+> 	public boolean onCheckIsTextEditor() {
+> 		return true;
+> 	}
+> 
+128a139
+> 	 * 
+131,132c142
+< 	public VncCanvas(final Context context, AttributeSet attrs)
+< 	{
+---
+> 	public VncCanvas(final Context context, AttributeSet attrs) {
+141,143c151,157
+< 	 * @param context Containing context (activity)
+< 	 * @param bean Connection settings
+< 	 * @param setModes Callback to run on UI thread after connection is set up
+---
+> 	 * 
+> 	 * @param context
+> 	 *            Containing context (activity)
+> 	 * @param bean
+> 	 *            Connection settings
+> 	 * @param setModes
+> 	 *            Callback to run on UI thread after connection is set up
+150c164,166
+< 		final ProgressDialog pd = ProgressDialog.show(getContext(), "Connecting...", "Establishing handshake.\nPlease wait...", true, true, new DialogInterface.OnCancelListener() {
+---
+> 		final ProgressDialog pd = ProgressDialog.show(getContext(),
+> 				"Connecting...", "Establishing handshake.\nPlease wait...",
+> 				true, true, new DialogInterface.OnCancelListener() {
+156c172,173
+< 						Utils.showErrorMessage(getContext(), "VNC connection aborted!");
+---
+> 								Utils.showErrorMessage(getContext(),
+> 										"VNC connection aborted!");
+161c178,179
+< 		final Display display = pd.getWindow().getWindowManager().getDefaultDisplay();
+---
+> 		final Display display = pd.getWindow().getWindowManager()
+> 				.getDefaultDisplay();
+165,166c183,186
+< 					connectAndAuthenticate(connection.getUserName(),connection.getPassword());
+< 					doProtocolInitialisation(display.getWidth(), display.getHeight());
+---
+> 					connectAndAuthenticate(connection.getUserName(),
+> 							connection.getPassword());
+> 					doProtocolInitialisation(display.getWidth(),
+> 							display.getHeight());
+188c208,210
+< 							if (e.getMessage() != null && (e.getMessage().indexOf("authentication") > -1)) {
+---
+> 							if (e.getMessage() != null
+> 									&& (e.getMessage()
+> 											.indexOf("authentication") > -1)) {
+191c213,214
+< 							final String error_ = error + "<br>" + e.getLocalizedMessage();
+---
+> 							final String error_ = error + "<br>"
+> 									+ e.getLocalizedMessage();
+194c217,218
+< 									Utils.showFatalErrorMessage(getContext(), error_);
+---
+> 									Utils.showFatalErrorMessage(getContext(),
+> 											error_);
+206c230,231
+< 		Log.i(TAG, "Connecting to " + connection.getAddress() + ", port " + connection.getPort() + "...");
+---
+> 		Log.i(TAG, "Connecting to " + connection.getAddress() + ", port "
+> 				+ connection.getPort() + "...");
+209c234,235
+< 		if (LOCAL_LOGV) Log.v(TAG, "Connected to server");
+---
+> 		if (LOCAL_LOGV)
+> 			Log.v(TAG, "Connected to server");
+212c238,239
+< 		if (connection.getUseRepeater() && connection.getRepeaterId() != null && connection.getRepeaterId().length()>0) {
+---
+> 		if (connection.getUseRepeater() && connection.getRepeaterId() != null
+> 				&& connection.getRepeaterId().length() > 0) {
+217c244,245
+< 			System.arraycopy(connection.getRepeaterId().getBytes(), 0, buffer, 0, connection.getRepeaterId().length());
+---
+> 			System.arraycopy(connection.getRepeaterId().getBytes(), 0, buffer,
+> 					0, connection.getRepeaterId().length());
+223c251,252
+< 		Log.i(TAG, "RFB server supports protocol version " + rfb.serverMajor + "." + rfb.serverMinor);
+---
+> 		Log.i(TAG, "RFB server supports protocol version " + rfb.serverMajor
+> 				+ "." + rfb.serverMinor);
+226c255,256
+< 		Log.i(TAG, "Using RFB protocol version " + rfb.clientMajor + "." + rfb.clientMinor);
+---
+> 		Log.i(TAG, "Using RFB protocol version " + rfb.clientMajor + "."
+> 				+ rfb.clientMinor);
+267c297,298
+< 		Log.i(TAG, "Desktop size is " + rfb.framebufferWidth + " x " + rfb.framebufferHeight);
+---
+> 		Log.i(TAG, "Desktop size is " + rfb.framebufferWidth + " x "
+> 				+ rfb.framebufferHeight);
+270,273c301,305
+< 		int capacity = BCFactory.getInstance().getBCActivityManager().getMemoryClass(Utils.getActivityManager(getContext()));
+< 		if (connection.getForceFull() == BitmapImplHint.AUTO)
+< 		{
+< 			if (rfb.framebufferWidth * rfb.framebufferHeight * FullBufferBitmapData.CAPACITY_MULTIPLIER <= capacity * 1024 * 1024)
+---
+> 		int capacity = BCFactory.getInstance().getBCActivityManager()
+> 				.getMemoryClass(Utils.getActivityManager(getContext()));
+> 		if (connection.getForceFull() == BitmapImplHint.AUTO) {
+> 			if (rfb.framebufferWidth * rfb.framebufferHeight
+> 					* FullBufferBitmapData.CAPACITY_MULTIPLIER <= capacity * 1024 * 1024)
+275,276c307
+< 		}
+< 		else
+---
+> 		} else
+306,309c337,338
+< 	private void mouseFollowPan()
+< 	{
+< 		if (connection.getFollowPan() && scaling.isAbleToPan())
+< 		{
+---
+> 	private void mouseFollowPan() {
+> 		if (connection.getFollowPan() && scaling.isAbleToPan()) {
+314,317c343,349
+< 			//Log.i(TAG,"scrollx " + scrollx + " scrolly " + scrolly + " mouseX " + mouseX +" Y " + mouseY + " w " + width + " h " + height);
+< 			if (mouseX < scrollx || mouseX >= scrollx + width || mouseY < scrolly || mouseY >= scrolly + height)
+< 			{
+< 				//Log.i(TAG,"warp to " + scrollx+width/2 + "," + scrolly + height/2);
+---
+> 			// Log.i(TAG,"scrollx " + scrollx + " scrolly " + scrolly +
+> 			// " mouseX " + mouseX +" Y " + mouseY + " w " + width + " h " +
+> 			// height);
+> 			if (mouseX < scrollx || mouseX >= scrollx + width
+> 					|| mouseY < scrolly || mouseY >= scrolly + height) {
+> 				// Log.i(TAG,"warp to " + scrollx+width/2 + "," + scrolly +
+> 				// height/2);
+323c355,356
+< 	public void processNormalProtocol(final Context context, ProgressDialog pd, final Runnable setModes) throws Exception {
+---
+> 	public void processNormalProtocol(final Context context, ProgressDialog pd,
+> 			final Runnable setModes) throws Exception {
+358c391,392
+< 						if (rfb.updateRectEncoding == RfbProto.EncodingXCursor || rfb.updateRectEncoding == RfbProto.EncodingRichCursor) {
+---
+> 						if (rfb.updateRectEncoding == RfbProto.EncodingXCursor
+> 								|| rfb.updateRectEncoding == RfbProto.EncodingRichCursor) {
+401c435,441
+< 							Log.e(TAG, "Unknown RFB rectangle encoding " + rfb.updateRectEncoding + " (0x" + Integer.toHexString(rfb.updateRectEncoding) + ")");
+---
+> 							Log.e(TAG,
+> 									"Unknown RFB rectangle encoding "
+> 											+ rfb.updateRectEncoding
+> 											+ " (0x"
+> 											+ Integer
+> 													.toHexString(rfb.updateRectEncoding)
+> 											+ ")");
+424c464,465
+< 					throw new Exception("Can't handle SetColourMapEntries message");
+---
+> 					throw new Exception(
+> 							"Can't handle SetColourMapEntries message");
+428c469,472
+< 						public void run() { Toast.makeText( context, "VNC Beep", Toast.LENGTH_SHORT); }
+---
+> 						public void run() {
+> 							Toast.makeText(context, "VNC Beep",
+> 									Toast.LENGTH_SHORT);
+> 						}
+460,462c504,509
+< 	 * Apply scroll offset and scaling to convert touch-space coordinates to the corresponding
+< 	 * point on the full frame.
+< 	 * @param e MotionEvent with the original, touch space coordinates.  This event is altered in place.
+---
+> 	 * Apply scroll offset and scaling to convert touch-space coordinates to the
+> 	 * corresponding point on the full frame.
+> 	 * 
+> 	 * @param e
+> 	 *            MotionEvent with the original, touch space coordinates. This
+> 	 *            event is altered in place.
+465,466c512
+< 	MotionEvent changeTouchCoordinatesToFullFrame(MotionEvent e)
+< 	{
+---
+> 	MotionEvent changeTouchCoordinatesToFullFrame(MotionEvent e) {
+473c519,520
+< 		e.setLocation(absoluteXPosition + e.getX() / scale, absoluteYPosition + e.getY() / scale);
+---
+> 		e.setLocation(absoluteXPosition + e.getX() / scale, absoluteYPosition
+> 				+ e.getY() / scale);
+480c527,528
+< 		if ( bitmapData!=null) bitmapData.dispose();
+---
+> 		if (bitmapData != null)
+> 			bitmapData.dispose();
+485a534
+> 	 * 
+489,490c538
+< 	void warpMouse(int x, int y)
+< 	{
+---
+> 	void warpMouse(int x, int y) {
+495,496c543
+< 		try
+< 		{
+---
+> 		try {
+498,500c545
+< 		}
+< 		catch ( IOException ioe)
+< 		{
+---
+> 		} catch (IOException ioe) {
+506,507c551,552
+< 	 * f(x,s) is a function that returns the coordinate in screen/scroll space corresponding
+< 	 * to the coordinate x in full-frame space with scaling s.
+---
+> 	 * f(x,s) is a function that returns the coordinate in screen/scroll space
+> 	 * corresponding to the coordinate x in full-frame space with scaling s.
+511,513c556,557
+< 	 * f(x,s) = (x - i/2) * s + ((i - w)/2)) * s
+< 	 *        = s (x - i/2 + i/2 + w/2)
+< 	 *        = s (x + w/2)
+---
+> 	 * f(x,s) = (x - i/2) * s + ((i - w)/2)) * s = s (x - i/2 + i/2 + w/2) = s
+> 	 * (x + w/2)
+516a561
+> 	 * 
+517a563
+> 	 * 
+518a565
+> 	 * 
+519a567
+> 	 * 
+520a569
+> 	 * 
+521a571
+> 	 * 
+528,529c578
+< 	void scrollToAbsolute()
+< 	{
+---
+> 	void scrollToAbsolute() {
+531c580,581
+< 		scrollTo((int)((absoluteXPosition + ((float)getWidth() - getImageWidth()) / 2 ) * scale),
+---
+> 		scrollTo(
+> 				(int) ((absoluteXPosition + ((float) getWidth() - getImageWidth()) / 2) * scale),
+538,539c588
+< 	void panToMouse()
+< 	{
+---
+> 	void panToMouse() {
+557,558c606
+< 		if (x - newX >= w - 5)
+< 		{
+---
+> 		if (x - newX >= w - 5) {
+562,564c610
+< 		}
+< 		else if (x < newX + 5)
+< 		{
+---
+> 		} else if (x < newX + 5) {
+573,574c619
+< 		if (y - newY >= h - 5)
+< 		{
+---
+> 		if (y - newY >= h - 5) {
+578,580c623
+< 		}
+< 		else if (y < newY + 5)
+< 		{
+---
+> 		} else if (y < newY + 5) {
+589,590c632
+< 		if (panned)
+< 		{
+---
+> 		if (panned) {
+596a639
+> 	 * 
+599c642,643
+< 	 * @return True if the pan changed the view (did not move view out of bounds); false otherwise
+---
+> 	 * @return True if the pan changed the view (did not move view out of
+> 	 *         bounds); false otherwise
+622,623c666
+< 		if (sX != 0.0 || sY != 0.0)
+< 		{
+---
+> 		if (sX != 0.0 || sY != 0.0) {
+630c673,675
+< 	/* (non-Javadoc)
+---
+> 	/*
+> 	 * (non-Javadoc)
+> 	 * 
+645c690,692
+< 	void handleRawRect(int x, int y, int w, int h, boolean paint) throws IOException {
+---
+> 
+> 	void handleRawRect(int x, int y, int w, int h, boolean paint)
+> 			throws IOException {
+679c726,728
+< 					(handleRawRectBuffer[idx + 2] & 0xff) << 16 | (handleRawRectBuffer[idx + 1] & 0xff) << 8 | (handleRawRectBuffer[idx] & 0xff);
+---
+> 					(handleRawRectBuffer[idx + 2] & 0xff) << 16
+> 							| (handleRawRectBuffer[idx + 1] & 0xff) << 8
+> 							| (handleRawRectBuffer[idx] & 0xff);
+773,777c822,823
+< 	 * Current state of "mouse" buttons
+< 	 * Alt meta means use second mouse button
+< 	 * 0 = none
+< 	 * 1 = default button
+< 	 * 2 = second button
+---
+> 	 * Current state of "mouse" buttons Alt meta means use second mouse button 0
+> 	 * = none 1 = default button 2 = second button
+783,786c829,836
+< 	 * @param evt motion event; x and y must already have been converted from screen coordinates
+< 	 * to remote frame buffer coordinates.  cameraButton flag is interpreted as second mouse
+< 	 * button
+< 	 * @param downEvent True if "mouse button" (touch or trackball button) is down when this happens
+---
+> 	 * 
+> 	 * @param evt
+> 	 *            motion event; x and y must already have been converted from
+> 	 *            screen coordinates to remote frame buffer coordinates.
+> 	 *            cameraButton flag is interpreted as second mouse button
+> 	 * @param downEvent
+> 	 *            True if "mouse button" (touch or trackball button) is down
+> 	 *            when this happens
+789,790c839
+< 	public boolean processPointerEvent(MotionEvent evt,boolean downEvent)
+< 	{
+---
+> 	public boolean processPointerEvent(MotionEvent evt, boolean downEvent) {
+796,799c845,854
+< 	 * @param evt motion event; x and y must already have been converted from screen coordinates
+< 	 * to remote frame buffer coordinates.
+< 	 * @param downEvent True if "mouse button" (touch or trackball button) is down when this happens
+< 	 * @param useRightButton If true, event is interpreted as happening with right mouse button
+---
+> 	 * 
+> 	 * @param evt
+> 	 *            motion event; x and y must already have been converted from
+> 	 *            screen coordinates to remote frame buffer coordinates.
+> 	 * @param downEvent
+> 	 *            True if "mouse button" (touch or trackball button) is down
+> 	 *            when this happens
+> 	 * @param useRightButton
+> 	 *            If true, event is interpreted as happening with right mouse
+> 	 *            button
+802,803c857,860
+< 	public boolean processPointerEvent(MotionEvent evt,boolean downEvent,boolean useRightButton) {
+< 		return processPointerEvent((int)evt.getX(),(int)evt.getY(), evt.getAction(), evt.getMetaState(), downEvent, useRightButton);
+---
+> 	public boolean processPointerEvent(MotionEvent evt, boolean downEvent,
+> 			boolean useRightButton) {
+> 		return processPointerEvent((int) evt.getX(), (int) evt.getY(),
+> 				evt.getAction(), evt.getMetaState(), downEvent, useRightButton);
+806c863,864
+< 	boolean processPointerEvent(int x, int y, int action, int modifiers, boolean mouseIsDown, boolean useRightButton) {
+---
+> 	boolean processPointerEvent(int x, int y, int action, int modifiers,
+> 			boolean mouseIsDown, boolean useRightButton) {
+808c866,867
+< 		    if (action == MotionEvent.ACTION_DOWN || (mouseIsDown && action == MotionEvent.ACTION_MOVE)) {
+---
+> 			if (action == MotionEvent.ACTION_DOWN
+> 					|| (mouseIsDown && action == MotionEvent.ACTION_MOVE)) {
+820,823c879,886
+< 		    if ( mouseX<0) mouseX=0;
+< 		    else if ( mouseX>=rfb.framebufferWidth) mouseX=rfb.framebufferWidth-1;
+< 		    if ( mouseY<0) mouseY=0;
+< 		    else if ( mouseY>=rfb.framebufferHeight) mouseY=rfb.framebufferHeight-1;
+---
+> 			if (mouseX < 0)
+> 				mouseX = 0;
+> 			else if (mouseX >= rfb.framebufferWidth)
+> 				mouseX = rfb.framebufferWidth - 1;
+> 			if (mouseY < 0)
+> 				mouseY = 0;
+> 			else if (mouseY >= rfb.framebufferHeight)
+> 				mouseY = rfb.framebufferHeight - 1;
+837a901
+> 	 * 
+840,841c904
+< 	class MouseScrollRunnable implements Runnable
+< 	{
+---
+> 	class MouseScrollRunnable implements Runnable {
+846c909,911
+< 		/* (non-Javadoc)
+---
+> 		/*
+> 		 * (non-Javadoc)
+> 		 * 
+851,852c916
+< 			try
+< 			{
+---
+> 			try {
+857,859c921
+< 			}
+< 			catch (IOException ioe)
+< 			{
+---
+> 			} catch (IOException ioe) {
+869,870c931
+< 		if (keyCode == KeyEvent.KEYCODE_CAMERA)
+< 		{
+---
+> 		if (keyCode == KeyEvent.KEYCODE_CAMERA) {
+872,877c933,937
+< 		}
+< 		else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
+< 		{
+< 			int mouseChange = keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ? MOUSE_BUTTON_SCROLL_DOWN : MOUSE_BUTTON_SCROLL_UP;
+< 			if (evt.getAction() == KeyEvent.ACTION_DOWN)
+< 			{
+---
+> 		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
+> 				|| keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+> 			int mouseChange = keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ? MOUSE_BUTTON_SCROLL_DOWN
+> 					: MOUSE_BUTTON_SCROLL_UP;
+> 			if (evt.getAction() == KeyEvent.ACTION_DOWN) {
+879,880c939
+< 				if (scrollRunnable.scrollButton != mouseChange)
+< 				{
+---
+> 				if (scrollRunnable.scrollButton != mouseChange) {
+885,887c944
+< 			}
+< 			else
+< 			{
+---
+> 			} else {
+892,897c949,952
+< 			try
+< 			{
+< 				rfb.writePointerEvent(mouseX, mouseY, evt.getMetaState(), pointerMask);
+< 			}
+< 			catch (IOException ioe)
+< 			{
+---
+> 			try {
+> 				rfb.writePointerEvent(mouseX, mouseY, evt.getMetaState(),
+> 						pointerMask);
+> 			} catch (IOException ioe) {
+904,905c959,965
+< 		   int key;
+< 		   int metaState = evt.getMetaState();
+---
+> 			int key = 0;
+> 			boolean ctrlState = evt.isCtrlPressed();
+> 			boolean shiftState = evt.isShiftPressed();
+> 
+> 			if (keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT
+> 					|| keyCode == KeyEvent.KEYCODE_ESCAPE)
+> 				keyCode = KeyEvent.KEYCODE_ENTER;
+908,915c968,1050
+< 		   	  case KeyEvent.KEYCODE_BACK :        key = 0xff1b; break;
+< 		      case KeyEvent.KEYCODE_DPAD_LEFT:    key = 0xff51; break;
+< 		   	  case KeyEvent.KEYCODE_DPAD_UP:      key = 0xff52; break;
+< 		   	  case KeyEvent.KEYCODE_DPAD_RIGHT:   key = 0xff53; break;
+< 		   	  case KeyEvent.KEYCODE_DPAD_DOWN:    key = 0xff54; break;
+< 		      case KeyEvent.KEYCODE_DEL: 		  key = 0xff08; break;
+< 		      case KeyEvent.KEYCODE_ENTER:        key = 0xff0d; break;
+< 		      case KeyEvent.KEYCODE_DPAD_CENTER:  key = 0xff0d; break;
+---
+> 			case KeyEvent.KEYCODE_BACK:
+> 				key = 0xff1b;
+> 				break;
+> 			case KeyEvent.KEYCODE_DPAD_LEFT:
+> 				key = 0xff51;
+> 				break;
+> 			case KeyEvent.KEYCODE_DPAD_UP:
+> 				key = 0xff52;
+> 				break;
+> 			case KeyEvent.KEYCODE_DPAD_RIGHT:
+> 				key = 0xff53;
+> 				break;
+> 			case KeyEvent.KEYCODE_DPAD_DOWN:
+> 				key = 0xff54;
+> 				break;
+> 			case KeyEvent.KEYCODE_DEL:
+> 				key = 0xff08;
+> 				break;
+> 			case KeyEvent.KEYCODE_ENTER:
+> 				key = 0xff0d;
+> 				break;
+> 			case KeyEvent.KEYCODE_DPAD_CENTER:
+> 				key = 0xff0d;
+> 				break;
+> 			case KeyEvent.KEYCODE_TAB:
+> 				key = 0xff09;
+> 				break;
+> 			case KeyEvent.KEYCODE_SHIFT_LEFT:
+> 				key = 0xffe1;
+> 				break;
+> 			case KeyEvent.KEYCODE_SHIFT_RIGHT:
+> 				key = 0xffe2;
+> 				break;
+> 			case KeyEvent.KEYCODE_CTRL_LEFT:
+> 				key = 0xffe3;
+> 				break;
+> 			case KeyEvent.KEYCODE_CTRL_RIGHT:
+> 				key = 0xffe4;
+> 				break;
+> 			case KeyEvent.KEYCODE_META_LEFT:
+> 				key = 0xffe7;
+> 				break;
+> 			case KeyEvent.KEYCODE_META_RIGHT:
+> 				key = 0xffe8;
+> 				break;
+> 			case KeyEvent.KEYCODE_ALT_LEFT:
+> 				key = 0xffe9;
+> 				break;
+> 			case KeyEvent.KEYCODE_ALT_RIGHT:
+> 				key = 0xffea;
+> 				break;
+> 
+> 			case KeyEvent.KEYCODE_F1:
+> 				key = 0xffbe;
+> 				break;
+> 			case KeyEvent.KEYCODE_F2:
+> 				key = 0xffbf;
+> 				break;
+> 			case KeyEvent.KEYCODE_F3:
+> 				key = 0xffc0;
+> 				break;
+> 			case KeyEvent.KEYCODE_F4:
+> 				key = 0xffc1;
+> 				break;
+> 			case KeyEvent.KEYCODE_F5:
+> 				key = 0xffc2;
+> 				break;
+> 			case KeyEvent.KEYCODE_F6:
+> 				key = 0xffc3;
+> 				break;
+> 			case KeyEvent.KEYCODE_F7:
+> 				key = 0xffc4;
+> 				break;
+> 			case KeyEvent.KEYCODE_F8:
+> 				key = 0xffc5;
+> 				break;
+> 			case KeyEvent.KEYCODE_F9:
+> 				key = 0xffc6;
+> 				break;
+> 			case KeyEvent.KEYCODE_F10:
+> 				key = 0xffc7;
+> 				break;
+> 
+918c1053,1058
+< 		    	  metaState = 0;
+---
+> 				if (key == 0) {
+> 					evt = new KeyEvent(evt.getAction(), evt.getKeyCode());
+> 					key = evt.getUnicodeChar();
+> 					keyCode = evt.getKeyCode();
+> 				}
+> 				// metaState = 0;
+922,923c1063
+< 	    		if (afterMenu)
+< 	    		{
+---
+> 				if (afterMenu) {
+930,931c1070,1072
+< 	    		//Log.i(TAG,"key = " + key + " metastate = " + metaState + " keycode = " + keyCode);
+< 	    		rfb.writeKeyEvent(key, metaState, down);
+---
+> 				Log.i(TAG, "key = " + key + " ctrl = " + ctrlState
+> 						+ " shift = " + shiftState + " keycode = " + keyCode);
+> 				rfb.writeKeyEvent(key, ctrlState, shiftState, down);
+944,947c1085,1086
+< 	void sendMetaKey(MetaKeyBean meta)
+< 	{
+< 		if (meta.isMouseClick())
+< 		{
+---
+> 	void sendMetaKey(MetaKeyBean meta) {
+> 		if (meta.isMouseClick()) {
+949c1088,1089
+< 				rfb.writePointerEvent(mouseX, mouseY, meta.getMetaFlags(), meta.getMouseButtons());
+---
+> 				rfb.writePointerEvent(mouseX, mouseY, meta.getMetaFlags(),
+> 						meta.getMouseButtons());
+951,953c1091
+< 			}
+< 			catch (IOException ioe)
+< 			{
+---
+> 			} catch (IOException ioe) {
+956,957c1094
+< 		}
+< 		else {
+---
+> 		} else {
+961,963c1098
+< 			}
+< 			catch (IOException ioe)
+< 			{
+---
+> 			} catch (IOException ioe) {
+969,970c1104
+< 	float getScale()
+< 	{
+---
+> 	float getScale() {
+1040c1174,1175
+< 			encodings[nEncodings++] = RfbProto.EncodingCompressLevel0 + compressLevel;
+---
+> 			encodings[nEncodings++] = RfbProto.EncodingCompressLevel0
+> 					+ compressLevel;
+1042c1177,1178
+< 			encodings[nEncodings++] = RfbProto.EncodingQualityLevel0 + jpegQuality;
+---
+> 			encodings[nEncodings++] = RfbProto.EncodingQualityLevel0
+> 					+ jpegQuality;
+1107c1244,1246
+< 		bitmapData.copyRect(new Rect(leftSrc, topSrc, rightSrc, bottomSrc), new Rect(leftDest, topDest, rightDest, bottomDest), handleCopyRectPaint);
+---
+> 		bitmapData.copyRect(new Rect(leftSrc, topSrc, rightSrc, bottomSrc),
+> 				new Rect(leftDest, topDest, rightDest, bottomDest),
+> 				handleCopyRectPaint);
+1125c1266,1267
+< 			pixel = Color.rgb(bg_buf[2] & 0xFF, bg_buf[1] & 0xFF, bg_buf[0] & 0xFF);
+---
+> 			pixel = Color.rgb(bg_buf[2] & 0xFF, bg_buf[1] & 0xFF,
+> 					bg_buf[0] & 0xFF);
+1146c1288,1289
+< 				pixel = Color.rgb(rre_buf[i + 2] & 0xFF, rre_buf[i + 1] & 0xFF, rre_buf[i] & 0xFF);
+---
+> 				pixel = Color.rgb(rre_buf[i + 2] & 0xFF, rre_buf[i + 1] & 0xFF,
+> 						rre_buf[i] & 0xFF);
+1149,1152c1292,1299
+< 			sx = x + ((rre_buf[i] & 0xff) << 8) + (rre_buf[i+1] & 0xff); i+=2;
+< 			sy = y + ((rre_buf[i] & 0xff) << 8) + (rre_buf[i+1] & 0xff); i+=2;
+< 			sw = ((rre_buf[i] & 0xff) << 8) + (rre_buf[i+1] & 0xff); i+=2;
+< 			sh = ((rre_buf[i] & 0xff) << 8) + (rre_buf[i+1] & 0xff); i+=2;
+---
+> 			sx = x + ((rre_buf[i] & 0xff) << 8) + (rre_buf[i + 1] & 0xff);
+> 			i += 2;
+> 			sy = y + ((rre_buf[i] & 0xff) << 8) + (rre_buf[i + 1] & 0xff);
+> 			i += 2;
+> 			sw = ((rre_buf[i] & 0xff) << 8) + (rre_buf[i + 1] & 0xff);
+> 			i += 2;
+> 			sh = ((rre_buf[i] & 0xff) << 8) + (rre_buf[i + 1] & 0xff);
+> 			i += 2;
+1174c1321,1322
+< 			pixel = Color.rgb(bg_buf[2] & 0xFF, bg_buf[1] & 0xFF, bg_buf[0] & 0xFF);
+---
+> 			pixel = Color.rgb(bg_buf[2] & 0xFF, bg_buf[1] & 0xFF,
+> 					bg_buf[0] & 0xFF);
+1195c1343,1344
+< 				pixel = Color.rgb(rre_buf[i + 2] & 0xFF, rre_buf[i + 1] & 0xFF, rre_buf[i] & 0xFF);
+---
+> 				pixel = Color.rgb(rre_buf[i + 2] & 0xFF, rre_buf[i + 1] & 0xFF,
+> 						rre_buf[i] & 0xFF);
+1217c1366,1367
+< 	private void handleHextileRect(int x, int y, int w, int h) throws IOException {
+---
+> 	private void handleHextileRect(int x, int y, int w, int h)
+> 			throws IOException {
+1246c1396,1398
+< 	private void handleHextileSubrect(int tx, int ty, int tw, int th) throws IOException {
+---
+> 
+> 	private void handleHextileSubrect(int tx, int ty, int tw, int th)
+> 			throws IOException {
+1266c1418,1420
+< 				hextile_bg = Color.rgb(backgroundColorBuffer[2] & 0xFF, backgroundColorBuffer[1] & 0xFF, backgroundColorBuffer[0] & 0xFF);
+---
+> 				hextile_bg = Color.rgb(backgroundColorBuffer[2] & 0xFF,
+> 						backgroundColorBuffer[1] & 0xFF,
+> 						backgroundColorBuffer[0] & 0xFF);
+1280c1434,1436
+< 				hextile_fg = Color.rgb(backgroundColorBuffer[2] & 0xFF, backgroundColorBuffer[1] & 0xFF, backgroundColorBuffer[0] & 0xFF);
+---
+> 				hextile_fg = Color.rgb(backgroundColorBuffer[2] & 0xFF,
+> 						backgroundColorBuffer[1] & 0xFF,
+> 						backgroundColorBuffer[0] & 0xFF);
+1311c1467,1468
+< 					bitmapData.drawRect(sx, sy, sw, sh, handleHextileSubrectPaint);
+---
+> 					bitmapData.drawRect(sx, sy, sw, sh,
+> 							handleHextileSubrectPaint);
+1326c1483,1484
+< 					bitmapData.drawRect(sx, sy, sw, sh, handleHextileSubrectPaint);
+---
+> 					bitmapData.drawRect(sx, sy, sw, sh,
+> 							handleHextileSubrectPaint);
+1333c1491,1492
+< 				hextile_fg = Color.rgb(rre_buf[i + 2] & 0xFF, rre_buf[i + 1] & 0xFF, rre_buf[i] & 0xFF);
+---
+> 				hextile_fg = Color.rgb(rre_buf[i + 2] & 0xFF,
+> 						rre_buf[i + 1] & 0xFF, rre_buf[i] & 0xFF);
+1343c1502,1503
+< 					bitmapData.drawRect(sx, sy, sw, sh, handleHextileSubrectPaint);
+---
+> 					bitmapData.drawRect(sx, sy, sw, sh,
+> 							handleHextileSubrectPaint);
+1390c1551,1552
+< 					int c = (bytesPerPixel == 1) ? colorPalette[0xFF & pix] : (0xFF000000 | pix);
+---
+> 					int c = (bytesPerPixel == 1) ? colorPalette[0xFF & pix]
+> 							: (0xFF000000 | pix);
+1394c1556,1557
+< 						bitmapData.drawRect(tx, ty, tw, th, handleZRLERectPaint);
+---
+> 						bitmapData
+> 								.drawRect(tx, ty, tw, th, handleZRLERectPaint);
+1402c1565,1566
+< 						readZrlePackedPixels(tw, th, handleZRLERectPalette, palSize);
+---
+> 						readZrlePackedPixels(tw, th, handleZRLERectPalette,
+> 								palSize);
+1472c1637,1639
+< 					pixels[offset + i] = (handleZlibRectBuffer[idx + 2] & 0xFF) << 16 | (handleZlibRectBuffer[idx + 1] & 0xFF) << 8 | (handleZlibRectBuffer[idx] & 0xFF);
+---
+> 					pixels[offset + i] = (handleZlibRectBuffer[idx + 2] & 0xFF) << 16
+> 							| (handleZlibRectBuffer[idx + 1] & 0xFF) << 8
+> 							| (handleZlibRectBuffer[idx] & 0xFF);
+1514c1682,1683
+< 				dst[i] = ((readPixelsBuffer[idx + 2] & 0xFF) << 16 | (readPixelsBuffer[idx + 1] & 0xFF) << 8 | (readPixelsBuffer[idx] & 0xFF));
+---
+> 				dst[i] = ((readPixelsBuffer[idx + 2] & 0xFF) << 16
+> 						| (readPixelsBuffer[idx + 1] & 0xFF) << 8 | (readPixelsBuffer[idx] & 0xFF));
+1530c1699,1700
+< 	private void readZrlePackedPixels(int tw, int th, int[] palette, int palSize) throws Exception {
+---
+> 	private void readZrlePackedPixels(int tw, int th, int[] palette, int palSize)
+> 			throws Exception {
+1532c1702,1703
+< 		int bppp = ((palSize > 16) ? 8 : ((palSize > 4) ? 4 : ((palSize > 2) ? 2 : 1)));
+---
+> 		int bppp = ((palSize > 16) ? 8 : ((palSize > 4) ? 4
+> 				: ((palSize > 2) ? 2 : 1)));
+1552c1723,1726
+< 						Log.e(TAG, "zrlePlainRLEPixels palette lookup out of bounds " + index + " (0x" + Integer.toHexString(index) + ")");
+---
+> 						Log.e(TAG,
+> 								"zrlePlainRLEPixels palette lookup out of bounds "
+> 										+ index + " (0x"
+> 										+ Integer.toHexString(index) + ")");
+1576c1750,1751
+< 				throw new Exception("ZRLE decoder: assertion failed" + " (len <= end-ptr)");
+---
+> 				throw new Exception("ZRLE decoder: assertion failed"
+> 						+ " (len <= end-ptr)");
+1588c1763,1764
+< 	private void readZrlePackedRLEPixels(int tw, int th, int[] palette) throws Exception {
+---
+> 	private void readZrlePackedRLEPixels(int tw, int th, int[] palette)
+> 			throws Exception {
+1605c1781,1782
+< 					throw new Exception("ZRLE decoder: assertion failed" + " (len <= end - ptr)");
+---
+> 					throw new Exception("ZRLE decoder: assertion failed"
+> 							+ " (len <= end - ptr)");
+1629c1806,1807
+< 			System.arraycopy(zrleTilePixels, offsetSrc, destPixels, bitmapData.offset(x, y + j), w);
+---
+> 			System.arraycopy(zrleTilePixels, offsetSrc, destPixels,
+> 					bitmapData.offset(x, y + j), w);
+1633a1812,1826
+> 	}
+> 
+> 	@Override
+> 	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+> 		// if (onCheckIsTextEditor() && isEnabled()) {
+> 		//outAttrs.inputType = EditorInfo.TYPE_CLASS_TEXT;
+> 		outAttrs.inputType = EditorInfo.TYPE_NULL;
+> 		outAttrs.imeOptions |= EditorInfo.IME_FLAG_NO_ENTER_ACTION;
+> 		return new BaseInputConnection(this, false) {
+> 			@Override
+> 			public boolean sendKeyEvent(KeyEvent event) {
+> 				Log.w("onCreateInputConnection", ""+event.getKeyCode());
+> 				return super.sendKeyEvent(event);
+> 			}
+> 		};
+diff -rbBEdiw AndroidVNC-orig/src/android/androidVNC/ZoomScaling.java AndroidVNC/src/android/androidVNC/ZoomScaling.java
+38c38
+< 		return R.id.itemInputTouchPanZoomMouse;
+---
+> 		return R.id.itemInputMouse;
+Nur in AndroidVNC/src/com/antlersoft/android: zoomer.
