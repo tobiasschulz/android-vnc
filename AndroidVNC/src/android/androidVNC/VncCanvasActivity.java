@@ -621,29 +621,7 @@ public class VncCanvasActivity extends Activity {
 		for (int i = 0; i < inputModeIds.length; ++i) {
 			if (inputModeIds[i] == id) {
 				if (inputModeHandlers[i] == null) {
-					switch (id) {
-					case R.id.itemInputFitToScreen:
-						inputModeHandlers[i] = new FitToScreenMode();
-						break;
-					case R.id.itemInputPan:
-						inputModeHandlers[i] = new PanMode();
-						break;
-					case R.id.itemInputMouse:
-						inputModeHandlers[i] = new MouseMode();
-						break;
-					case R.id.itemInputTouchPanZoomMouse:
-						inputModeHandlers[i] = new MouseMode();
-						break;
-					case R.id.itemInputTouchPanTrackballMouse:
-						inputModeHandlers[i] = new TouchPanTrackballMouse();
-						break;
-					case R.id.itemInputDPadPanTouchMouse:
-						inputModeHandlers[i] = new DPadPanTouchMouseMode();
-						break;
-					case R.id.itemInputTouchpad:
 						inputModeHandlers[i] = new TouchpadInputHandler();
-						break;
-					}
 				}
 				return inputModeHandlers[i];
 			}
