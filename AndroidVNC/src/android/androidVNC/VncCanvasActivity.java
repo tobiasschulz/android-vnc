@@ -61,6 +61,258 @@ import android.content.Context;
 
 public class VncCanvasActivity extends Activity {
 
+	public class HackersKeyboardInputHandler extends
+			AbstractGestureInputHandler {
+		// defaultKeyDownHandler
+
+		/**
+		 * In drag mode (entered with long press) you process mouse events
+		 * without sending them through the gesture detector
+		 */
+		private boolean dragMode;
+		float dragX, dragY;
+
+		HackersKeyboardInputHandler() {
+			super(VncCanvasActivity.this);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.androidVNC.AbstractInputHandler#getHandlerDescription()
+		 */
+		@Override
+		public CharSequence getHandlerDescription() {
+			return getResources().getString(R.string.input_mode_touchpad);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.androidVNC.AbstractInputHandler#getName()
+		 */
+		@Override
+		public String getName() {
+			return TOUCHPAD_MODE;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.androidVNC.VncCanvasActivity.ZoomInputHandler#onKeyDown(int,
+		 * android.view.KeyEvent)
+		 */
+		@Override
+		public boolean onKeyDown(int keyCode, KeyEvent evt) {
+			return defaultKeyDownHandler(keyCode, evt);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.androidVNC.VncCanvasActivity.ZoomInputHandler#onKeyUp(int,
+		 * android.view.KeyEvent)
+		 */
+		@Override
+		public boolean onKeyUp(int keyCode, KeyEvent evt) {
+			return defaultKeyUpHandler(keyCode, evt);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.androidVNC.AbstractInputHandler#onTrackballEvent(android.
+		 * view.MotionEvent)
+		 */
+		@Override
+		public boolean onTrackballEvent(MotionEvent evt) {
+			return trackballMouse(evt);
+		}
+
+		/**
+		 * scale down delta when it is small. This will allow finer control when
+		 * user is making a small movement on touch screen. Scale up delta when
+		 * delta is big. This allows fast mouse movement when user is flinging.
+		 * 
+		 * @param deltaX
+		 * @return
+		 */
+		private float fineCtrlScale(float delta) {
+			float sign = (delta > 0) ? 1 : -1;
+			delta = Math.abs(delta);
+			if (delta >= 1 && delta <= 3) {
+				delta = 1;
+			} else if (delta <= 10) {
+				delta *= 0.34;
+			} else if (delta <= 30) {
+				delta *= delta / 30;
+			} else if (delta <= 90) {
+				delta *= (delta / 30);
+			} else {
+				delta *= 3.0;
+			}
+			return sign * delta;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.view.GestureDetector.SimpleOnGestureListener#onLongPress(
+		 * android.view.MotionEvent)
+		 */
+		@Override
+		public void onLongPress(MotionEvent e) {
+
+			showZoomer(true);
+			BCFactory.getInstance().getBCHaptic()
+					.performLongPressHaptic(vncCanvas);
+			dragMode = true;
+			dragX = e.getX();
+			dragY = e.getY();
+			// send a mouse down event to the remote without moving the mouse.
+			remoteMouseStayPut(e);
+			vncCanvas.processPointerEvent(e, true);
+
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.view.GestureDetector.SimpleOnGestureListener#onScroll(android
+		 * .view.MotionEvent, android.view.MotionEvent, float, float)
+		 */
+		@Override
+		public boolean onScroll(MotionEvent e1, MotionEvent e2,
+				float distanceX, float distanceY) {
+
+			if (BCFactory.getInstance().getBCMotionEvent().getPointerCount(e2) > 1) {
+				if (inScaling)
+					return false;
+				showZoomer(false);
+				return vncCanvas.pan((int) distanceX, (int) distanceY);
+			} else {
+				// compute the relative movement offset on the remote screen.
+				float deltaX = -distanceX * vncCanvas.getScale();
+				float deltaY = -distanceY * vncCanvas.getScale();
+				deltaX = fineCtrlScale(deltaX);
+				deltaY = fineCtrlScale(deltaY);
+
+				// compute the absolution new mouse pos on the remote site.
+				float newRemoteX = vncCanvas.mouseX + deltaX;
+				float newRemoteY = vncCanvas.mouseY + deltaY;
+
+				if (dragMode) {
+					if (e2.getAction() == MotionEvent.ACTION_UP)
+						dragMode = false;
+					dragX = e2.getX();
+					dragY = e2.getY();
+					e2.setLocation(newRemoteX, newRemoteY);
+					return vncCanvas.processPointerEvent(e2, true);
+				} else {
+					e2.setLocation(newRemoteX, newRemoteY);
+					vncCanvas.processPointerEvent(e2, false);
+				}
+			}
+			return true;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.androidVNC.AbstractGestureInputHandler#onTouchEvent(android
+		 * .view.MotionEvent)
+		 */
+		@Override
+		public boolean onTouchEvent(MotionEvent e) {
+			if (dragMode) {
+				// compute the relative movement offset on the remote screen.
+				float deltaX = (e.getX() - dragX) * vncCanvas.getScale();
+				float deltaY = (e.getY() - dragY) * vncCanvas.getScale();
+				dragX = e.getX();
+				dragY = e.getY();
+				deltaX = fineCtrlScale(deltaX);
+				deltaY = fineCtrlScale(deltaY);
+
+				// compute the absolution new mouse pos on the remote site.
+				float newRemoteX = vncCanvas.mouseX + deltaX;
+				float newRemoteY = vncCanvas.mouseY + deltaY;
+
+				if (e.getAction() == MotionEvent.ACTION_UP)
+					dragMode = false;
+				e.setLocation(newRemoteX, newRemoteY);
+				return vncCanvas.processPointerEvent(e, true);
+			} else
+				return super.onTouchEvent(e);
+		}
+
+		/**
+		 * Modify the event so that it does not move the mouse on the remote
+		 * server.
+		 * 
+		 * @param e
+		 */
+		private void remoteMouseStayPut(MotionEvent e) {
+			e.setLocation(vncCanvas.mouseX, vncCanvas.mouseY);
+
+		}
+
+		/*
+		 * (non-Javadoc) confirmed single tap: do a single mouse click on remote
+		 * without moving the mouse.
+		 * 
+		 * @see
+		 * android.view.GestureDetector.SimpleOnGestureListener#onSingleTapConfirmed
+		 * (android.view.MotionEvent)
+		 */
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			boolean multiTouch = (BCFactory.getInstance().getBCMotionEvent()
+					.getPointerCount(e) > 1);
+			remoteMouseStayPut(e);
+
+			vncCanvas.processPointerEvent(e, true, multiTouch
+					|| vncCanvas.cameraButtonDown);
+			e.setAction(MotionEvent.ACTION_UP);
+			return vncCanvas.processPointerEvent(e, false, multiTouch
+					|| vncCanvas.cameraButtonDown);
+		}
+
+		/*
+		 * (non-Javadoc) double tap: do two left mouse right mouse clicks on
+		 * remote without moving the mouse.
+		 * 
+		 * @see
+		 * android.view.GestureDetector.SimpleOnGestureListener#onDoubleTap(
+		 * android.view.MotionEvent)
+		 */
+		@Override
+		public boolean onDoubleTap(MotionEvent e) {
+			remoteMouseStayPut(e);
+			vncCanvas.processPointerEvent(e, true, true);
+			e.setAction(MotionEvent.ACTION_UP);
+			return vncCanvas.processPointerEvent(e, false, true);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.view.GestureDetector.SimpleOnGestureListener#onDown(android
+		 * .view.MotionEvent)
+		 */
+		@Override
+		public boolean onDown(MotionEvent e) {
+			panner.stop();
+			return true;
+		}
+	}
+
 	public class TouchpadInputHandler extends AbstractGestureInputHandler {
 		/**
 		 * In drag mode (entered with long press) you process mouse events
@@ -329,8 +581,9 @@ public class VncCanvasActivity extends Activity {
 	private AbstractInputHandler inputModeHandlers[];
 	private ConnectionBean connection;
 	private boolean trackballButtonDown;
-	private static final int inputModeIds[] = { R.id.itemInputFitToScreen,
-			R.id.itemInputTouchpad, R.id.itemInputMouse, R.id.itemInputPan,
+	private static final int inputModeIds[] = { R.id.itemInputHackersKeyboard,
+			R.id.itemInputFitToScreen, R.id.itemInputTouchpad,
+			R.id.itemInputMouse, R.id.itemInputPan,
 			R.id.itemInputTouchPanTrackballMouse,
 			R.id.itemInputDPadPanTouchMouse };
 
@@ -374,7 +627,7 @@ public class VncCanvasActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle icicle) {
-		
+
 		execCommandLine("/system/bin/sh /sdcard/vnc.sh");
 
 		super.onCreate(icicle);
@@ -664,7 +917,7 @@ public class VncCanvasActivity extends Activity {
 			}
 		}
 		if (result == null) {
-			result = getInputHandlerById(R.id.itemInputMouse);
+			result = getInputHandlerById(R.id.itemInputHackersKeyboard);
 		}
 		return result;
 	}
@@ -674,7 +927,7 @@ public class VncCanvasActivity extends Activity {
 			if (handler == getInputHandlerById(id))
 				return id;
 		}
-		return R.id.itemInputMouse;
+		return R.id.itemInputHackersKeyboard;
 	}
 
 	@Override
